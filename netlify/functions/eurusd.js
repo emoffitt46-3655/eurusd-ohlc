@@ -1,6 +1,17 @@
 export default async () => {
   try {
-    const res = await fetch("https://api.exchangerate.host/latest?base=EUR&symbols=USD");
+    // Get yesterday's date in YYYY-MM-DD
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const dateStr = `${y}-${m}-${day}`;
+
+    // Frankfurter API
+    const url = `https://api.frankfurter.app/${dateStr}?from=EUR&to=USD`;
+
+    const res = await fetch(url);
     const json = await res.json();
 
     const rate = json.rates.USD;
