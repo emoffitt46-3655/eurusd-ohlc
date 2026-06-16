@@ -1,51 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>EUR/USD – Yesterday OHLC</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: white;
-        color: black;
-        padding: 40px;
-        font-size: 28px;
-        line-height: 1.6;
-    }
-</style>
-</head>
-<body>
-
-<h2>EUR/USD – Yesterday’s OHLC</h2>
-
-<div id="data">Loading...</div>
-
 <script>
 async function loadOHLC() {
     try {
-        // Get yesterday's date in YYYY-MM-DD
-        const d = new Date();
-        d.setDate(d.getDate() - 1);
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        const dateStr = `${y}-${m}-${day}`;
-
-        // Frankfurter API for EUR/USD OHLC
-        const url = `https://api.frankfurter.app/${dateStr}?from=EUR&to=USD`;
+        const url = "https://stellar-cupcake-626d3b.netlify.app/.netlify/functions/eurusd";
         const res = await fetch(url);
         const json = await res.json();
 
-        const open = Number(json.rates.USD).toFixed(5);
-        const close = Number(json.rates.USD).toFixed(5);
-        const high = Number(json.rates.USD).toFixed(5);
-        const low = Number(json.rates.USD).toFixed(5);
-
         document.getElementById("data").innerHTML = `
-            Open: ${open}<br>
-            High: ${high}<br>
-            Low: ${low}<br>
-            Close: ${close}
+            Open: ${json.open}<br>
+            High: ${json.high}<br>
+            Low: ${json.low}<br>
+            Close: ${json.close}
         `;
     } catch (err) {
         document.getElementById("data").innerHTML = "Error loading data.";
@@ -54,6 +18,3 @@ async function loadOHLC() {
 
 loadOHLC();
 </script>
-
-</body>
-</html>
