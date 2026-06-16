@@ -1,3 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EUR/USD OHLC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f5f5f5;
+            text-align: center;
+        }
+        #data {
+            font-size: 28px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+
+<h2>EUR/USD OHLC</h2>
+
+<div id="data">Loading...</div>
+
 <script>
 async function loadOHLC() {
     try {
@@ -6,16 +34,18 @@ async function loadOHLC() {
         const json = await res.json();
 
         document.getElementById("data").innerHTML = `
-            Open: ${json.open}<br>
-            High: ${json.high}<br>
-            Low: ${json.low}<br>
-            Close: ${json.close}
+            <strong>Open:</strong> ${json.open}<br>
+            <strong>High:</strong> ${json.high}<br>
+            <strong>Low:</strong> ${json.low}<br>
+            <strong>Close:</strong> ${json.close}
         `;
     } catch (err) {
         document.getElementById("data").innerHTML = "Error loading data.";
     }
 }
-<div id="data">Loading...</div>
 
 loadOHLC();
 </script>
+
+</body>
+</html>
