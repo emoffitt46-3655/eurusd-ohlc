@@ -1,6 +1,4 @@
-import fetch from "node-fetch";
-
-export async function handler() {
+export default async function handler() {
   try {
     const res = await fetch("https://api.exchangerate.host/latest?base=EUR&symbols=USD");
     const json = await res.json();
