@@ -31,18 +31,26 @@ async function loadOHLC() {
         const day = String(d.getDate()).padStart(2, '0');
         const dateStr = `${y}-${m}-${day}`;
 
-        // Fetch OHLC from exchangerate.host
-        const url = `https://api.exchangerate.host/ohlc?base=EUR&symbols=USD&start_date=${dateStr}&end_date=${dateStr}`;
+        // FCS API endpoint for EUR/USD daily data
+        const url = `https://fcsapi.com/api-v3/forex/history?symbol=EUR/USD&period=1d`;
+
         const res = await fetch(url);
         const json = await res.json();
 
-        const ohlc = json.rates[dateStr].USD;
+        // Extract OHLC from the most recent completed day
+        const ohlc = json.response[0];
+
+        // Format to 5 decimals
+        const open = Number(ohlc.o).toFixed(5);
+        const high = Number(ohlc.h).toFixed(5);
+        const low = Number(ohlc.l).toFixed(5);
+        const close = Number(ohlc.c).toFixed(5);
 
         document.getElementById("data").innerHTML = `
-            Open: ${ohlc.open}<br>
-            High: ${ohlc.high}<br>
-            Low: ${ohlc.low}<br>
-            Close: ${ohlc.close}
+            Open: ${open}<br>
+            High: ${high}<br>
+            Low: ${low}<br>
+            Close: ${close}
         `;
     } catch (err) {
         document.getElementById("data").innerHTML = "Error loading data.";
