@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EUR/USD – Yesterday OHLC</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: white;
+        color: black;
+        padding: 40px;
+        font-size: 28px;
+        line-height: 1.6;
+    }
+</style>
+</head>
+<body>
+
+<h2>EUR/USD – Yesterday’s OHLC</h2>
+
+<div id="data">Loading...</div>
+
+<script>
+async function fetchData() {
+    try {
+        // Myfxbook daily OHLC (Open)
+        const myfx = await fetch("https://www.myfxbook.com/api/get-historical-data.json?symbol=EURUSD&timeScale=1");
+        const myfxData = await myfx.json();
+        const yesterday = myfxData.data[myfxData.data.length - 2];
+
+        // Barchart (High, Low, Close)
+        const bc = await fetch("https://barchart.com/forex/quotes/%5EEURUSD");
+        const bcText = await bc.text();
+
+        const high = bcText.match(/Previous High<\/span>\s*([\d.]+)/)[1];
+        const low = bcText.match(/Previous Low<\/span>\s*([\d.]+)/)[1];
+        const close = bcText.match(/Previous Close<\/span>\s*([\d.]+)/)[1];
+
+        document.getElementById("data").innerHTML = `
+            Open: ${yesterday.o}<br>
+            High: ${high}<br>
+            Low: ${low}<br>
+            Close: ${close}
+        `;
+    } catch (e) {
+        document.getElementById("data").innerHTML = "Error loading data.";
+    }
+}
+
+fetchData();
+</script>
+
+</body>
+</html>
