@@ -31,20 +31,15 @@ async function loadOHLC() {
         const day = String(d.getDate()).padStart(2, '0');
         const dateStr = `${y}-${m}-${day}`;
 
-        // FCS API endpoint for EUR/USD daily data
-        const url = `https://fcsapi.com/api-v3/forex/history?symbol=EUR/USD&period=1d`;
-
+        // Frankfurter API for EUR/USD OHLC
+        const url = `https://api.frankfurter.app/${dateStr}?from=EUR&to=USD`;
         const res = await fetch(url);
         const json = await res.json();
 
-        // Extract OHLC from the most recent completed day
-        const ohlc = json.response[0];
-
-        // Format to 5 decimals
-        const open = Number(ohlc.o).toFixed(5);
-        const high = Number(ohlc.h).toFixed(5);
-        const low = Number(ohlc.l).toFixed(5);
-        const close = Number(ohlc.c).toFixed(5);
+        const open = Number(json.rates.USD).toFixed(5);
+        const close = Number(json.rates.USD).toFixed(5);
+        const high = Number(json.rates.USD).toFixed(5);
+        const low = Number(json.rates.USD).toFixed(5);
 
         document.getElementById("data").innerHTML = `
             Open: ${open}<br>
