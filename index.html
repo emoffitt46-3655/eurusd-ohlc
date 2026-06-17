@@ -1,51 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>EUR/USD OHLC</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            background: #f5f5f5;
-            text-align: center;
-        }
-        #data {
-            font-size: 28px;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            display: inline-block;
-            box-shadow: 0 0 10px rgba(0,0,0,0.15);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>EUR/USD OHLC Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .card {
+      background: #1f2937;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+    .label {
+      font-weight: bold;
+      color: #9ca3af;
+    }
+    .value {
+      color: #e5e7eb;
+    }
+    .status {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+    button {
+      margin-top: 15px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+  </style>
 </head>
 <body>
+  <h1>EUR/USD OHLC</h1>
+  <div class="card">
+    <div class="row">
+      <div class="label">Open:</div>
+      <div class="value" id="open">—</div>
+    </div>
+    <div class="row">
+      <div class="label">High:</div>
+      <div class="value" id="high">—</div>
+    </div>
+    <div class="row">
+      <div class="label">Low:</div>
+      <div class="value" id="low">—</div>
+    </div>
+    <div class="row">
+      <div class="label">Close:</div>
+      <div class="value" id="close">—</div>
+    </div>
+    <div class="status" id="status">Loading latest EUR/USD OHLC…</div>
+    <button id="refresh">Refresh</button>
+  </div>
 
-<h2>EUR/USD OHLC</h2>
+  <script>
+    const API_URL = "https://stellar-cupcake-626d3b.netlify.app/.netlify/functions/eurusd";
 
-<div id="data">Loading...</div>
+    async function loadOHLC() {
+      const status = document.getElementById("status");
+      status.textContent = "Loading latest EUR/USD OHLC…";
 
-<script>
-async function loadOHLC() {
-    try {
-        const url = "https://stellar-cupcake-626d3b.netlify.app/.netlify/functions/eurusd";
-        const res = await fetch(url);
-        const json = await res.json();
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+          throw new Error("Network response was not ok: " + response.status);
+        }
 
-        document.getElementById("data").innerHTML = `
-            <strong>Open:</strong> ${json.open}<br>
-            <strong>High:</strong> ${json.high}<br>
-            <strong>Low:</strong> ${json.low}<br>
-            <strong>Close:</strong> ${json.close}
-        `;
-    } catch (err) {
-        document.getElementById("data").innerHTML = "Error loading data.";
-    }
-}
+        const data = await response.json();
 
-loadOHLC();
-</script>
-
-</body>
-</html>
+        document.getElementById("open").textContent = data.open?.toFixed(4) ?? "N/A";
+        document.getElementById("high").textContent = data.high?.toFixed(4) ?? "N/A";
+        document.getElementById("low").textContent = data.low?.toFixed(4) ?? "N/A";
+        document.getElementById("close").textContent = data.close
