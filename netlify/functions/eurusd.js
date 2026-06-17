@@ -1,4 +1,4 @@
-export default async () => {
+exports.handler = async () => {
   try {
     // Get yesterday's date in YYYY-MM-DD
     const d = new Date();
@@ -16,19 +16,21 @@ export default async () => {
 
     const rate = json.rates.USD;
 
-    const body = JSON.stringify({
-      open: rate,
-      high: rate,
-      low: rate,
-      close: rate
-    });
-
-    return new Response(body, {
-      status: 200,
-      headers: { "Access-Control-Allow-Origin": "*" }
-    });
+    return {
+      statusCode: 200,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({
+        open: rate,
+        high: rate,
+        low: rate,
+        close: rate
+      })
+    };
 
   } catch (err) {
-    return new Response("Error fetching data", { status: 500 });
+    return {
+      statusCode: 500,
+      body: "Error fetching data"
+    };
   }
 };
