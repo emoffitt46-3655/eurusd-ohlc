@@ -1,3 +1,4 @@
+// redeploy
 exports.handler = async () => {
   try {
     // Get yesterday's date in YYYY-MM-DD
